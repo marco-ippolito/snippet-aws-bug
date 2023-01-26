@@ -1,5 +1,6 @@
 node_modules
 .env
+dist
 
 # yarn berry with no zero installs
 .yarn/*
