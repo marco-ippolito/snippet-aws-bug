@@ -5,21 +5,40 @@ dotenv.config();
 
 const accessKeyId = process.env.ACCESS_KEY || "";
 const secretAccessKey = process.env.SECRET_ACCESS_KEY || "";
-const region = "us-east-1";
-const bucketName = "node-bug-bucket";
+const region = process.env.REGION || "";
+const bucketName = process.env.BUCKET_NAME || "";
 
 const main = async (): Promise<void> => {
-  const s3 = new S3({ credentials: { accessKeyId, secretAccessKey }, region });
+  await performCommands();
+};
+
+const performCommands = async (): Promise<void> => {
+  await finalize(bucketName);
+};
+
+export const finalize = async (bucket: string): Promise<void> => {
+  const credentials = {
+    accessKeyId,
+    secretAccessKey,
+  };
+
+  const s3 = new S3({ credentials, region });
+
   let counter = 0;
   while (true) {
-    counter++
+    counter++;
     console.log("START");
-    await pushToS3(s3, bucketName, Buffer.from("", "utf-8"), "test/2");
+    await pushToS3(s3, bucket, Buffer.from("", "utf-8"), "test/2");
     console.log(`DONE: ${counter}`);
   }
 };
 
-async function pushToS3(s3: S3, bucket: string, data: Buffer, toFile: string) {
+const pushToS3 = async (
+  s3: S3,
+  bucket: string,
+  data: Buffer,
+  toFile: string
+): Promise<void> => {
   try {
     let contentType = "application/octet-stream";
     await s3.send(
@@ -34,7 +53,7 @@ async function pushToS3(s3: S3, bucket: string, data: Buffer, toFile: string) {
   } catch (e) {
     console.log(e);
   }
-}
+};
 
 main()
   .then(() => {
