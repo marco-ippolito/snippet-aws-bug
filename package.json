@@ -4,10 +4,7 @@
   "scripts": {
     "start:native": "node ./dist/native.js",
     "start:broken": "node ./dist/sdk-broken.js",
-    "build": "npx tsc --outDir dist"
-  },
-  "resolutions": {
-    "typescript": "^4.7.4"
+    "build": "tsc --outDir dist"
   },
   "dependencies": {
     "@aws-sdk/client-cloudfront": "^3.162.0",
